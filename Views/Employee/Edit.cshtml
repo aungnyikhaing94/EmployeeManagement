@@ -1,0 +1,79 @@
+﻿@model EmployeeManagement.Models.Employee
+
+<form method="post">
+    <input asp-for="empNo" hidden />
+    <div class="border p-3">
+        <div class="form-group row">
+            <h2 class="text-info pl-3">Edit Employee</h2>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="form-group row p-2">
+                    <div class="col-4">
+                        <label asp-for="empName"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="empName" class="form-control" />
+                        <span asp-validation-for="empName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row p-2">
+                    <div class="col-4">
+                        <label asp-for="DOB"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="DOB" class="form-control" />
+                        <span asp-validation-for="DOB" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row p-2">
+                    <div class="col-4">
+                        <label asp-for="gender"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="gender" class="form-control" />
+                        <span asp-validation-for="gender" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row p-2">
+                    <div class="col-4">
+                        <label asp-for="department"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="department" class="form-control" />
+                        <span asp-validation-for="department" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row p-2">
+                    <div class="col-4">
+                        <label asp-for="position"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="position" class="form-control" />
+                        <span asp-validation-for="position" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row p-2">
+                    <div class="col-8 offset-4 row">
+                        <div class="col">
+                            <input type="submit" class="btn btn-info w-100" value="Update" />
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-success w-100"><i class="fas fa-sign-out-alt"></i>&nbsp;Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                @* Keep this empty *@
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+
+    @{ <partial name="_ValidationScriptsPartial" /> }
+
+}
+
