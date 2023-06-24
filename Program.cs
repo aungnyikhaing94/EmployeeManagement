@@ -9,6 +9,7 @@ builder.Services.AddControllersWithViews();
 //Register DBContext
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
 var app = builder.Build();
 
@@ -22,6 +23,12 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbInitializer = scope.ServiceProvider.GetService<IDbInitializer>();
+    dbInitializer.Initialize();
+}
 
 app.MapControllerRoute(
     name: "default",
