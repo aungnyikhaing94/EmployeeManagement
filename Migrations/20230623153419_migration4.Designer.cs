@@ -4,6 +4,7 @@ using EmployeeManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeeManagement.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230623153419_migration4")]
+    partial class migration4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,7 +69,8 @@ namespace EmployeeManagement.Migrations
 
                     b.HasKey("empNo");
 
-                    b.HasIndex("DepartmentId");
+                    b.HasIndex("DepartmentId")
+                        .IsUnique();
 
                     b.HasIndex("PositionId");
 
@@ -98,8 +102,8 @@ namespace EmployeeManagement.Migrations
             modelBuilder.Entity("EmployeeManagement.Models.Employee", b =>
                 {
                     b.HasOne("EmployeeManagement.Models.Department", "Department")
-                        .WithMany("Employee")
-                        .HasForeignKey("DepartmentId")
+                        .WithOne("Employee")
+                        .HasForeignKey("EmployeeManagement.Models.Employee", "DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -127,7 +131,8 @@ namespace EmployeeManagement.Migrations
 
             modelBuilder.Entity("EmployeeManagement.Models.Department", b =>
                 {
-                    b.Navigation("Employee");
+                    b.Navigation("Employee")
+                        .IsRequired();
 
                     b.Navigation("Position");
                 });

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EmployeeManagement.Migrations
 {
     /// <inheritdoc />
-    public partial class addEmployeeToDatabase : Migration
+    public partial class migration1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,9 +19,7 @@ namespace EmployeeManagement.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     empName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DOB = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    department = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    position = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    gender = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

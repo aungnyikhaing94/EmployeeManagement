@@ -4,6 +4,7 @@ using EmployeeManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeeManagement.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230623105415_migration3")]
+    partial class migration3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,9 +53,6 @@ namespace EmployeeManagement.Migrations
                     b.Property<DateTime>("DOB")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
-
                     b.Property<int>("PositionId")
                         .HasColumnType("int");
 
@@ -65,8 +65,6 @@ namespace EmployeeManagement.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("empNo");
-
-                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("PositionId");
 
@@ -97,19 +95,11 @@ namespace EmployeeManagement.Migrations
 
             modelBuilder.Entity("EmployeeManagement.Models.Employee", b =>
                 {
-                    b.HasOne("EmployeeManagement.Models.Department", "Department")
-                        .WithMany("Employee")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("EmployeeManagement.Models.Position", "Position")
                         .WithMany("Employees")
                         .HasForeignKey("PositionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Department");
 
                     b.Navigation("Position");
                 });
@@ -127,8 +117,6 @@ namespace EmployeeManagement.Migrations
 
             modelBuilder.Entity("EmployeeManagement.Models.Department", b =>
                 {
-                    b.Navigation("Employee");
-
                     b.Navigation("Position");
                 });
 

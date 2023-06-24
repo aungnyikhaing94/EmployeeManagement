@@ -1,39 +1,21 @@
 ﻿@model IEnumerable<EmployeeManagement.Models.Employee>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Search";
 }
-
-<div class="container p-3 bg-white">
-    <div class="row pt-4">
+<div class="container">
+    <div class="row">
         <div class="col-6">
-            <h2 class="text-primary">Employee Info</h2>
+            <h1>Search Result</h1>
         </div>
         <div class="col-6 text-end">
-            <div class="row">
-                <form method="post" asp-action="Search">
-                    <div class="row">
-                        <div class="col-5">
-                            <input type="text" class="form-control" name="searchStr"/>
-                        </div>
-                        <div class="col-2 text-start" >
-                            <input type="submit" class="btn btn-info" value="Search" />
-                        </div>
-                        <div class="col">
-                            <a asp-controller="Employee" asp-action="Create" class="btn btn-primary">           
-                                <i class="fas fa-plus"></i>&nbsp;Create New Employee
-                            </a>
-                        </div>
-                    </div>
-                </form>
-                
-            </div>
-            
+            <a asp-action="Index" class="btn btn-primary">Back To Home</a>
         </div>
     </div>
 
-    <br /> <br />
-    @if (Model.Count() > 0)
+
+
+@if (Model.Count() > 0)
     {
         <table class="table table-bordered table-striped" style="width:100%">
             <thead>
@@ -86,9 +68,7 @@
     }
     else
     {
-        <p>No employee exists.</p>
+        <p>No result.</p>
     }
 
-
 </div>
-

@@ -37,20 +37,18 @@
                 </div>
                  <div class="form-group row p-2">
                     <div class="col-4">
-                        <label asp-for="department"></label>
+                        <label asp-for="DepartmentId">Department</label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="department" disabled class="form-control" />
-                        <span asp-validation-for="department" class="text-danger"></span>
+                        <input asp-for="Department.Name" disabled class="form-control" />
                     </div>
                 </div>
                  <div class="form-group row p-2">
                     <div class="col-4">
-                        <label asp-for="position"></label>
+                        <label asp-for="PositionId">Position</label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="position" disabled class="form-control" />
-                        <span asp-validation-for="position" class="text-danger"></span>
+                        <input asp-for="Position.Name" disabled class="form-control" />
                     </div>
                 </div>
                 <div class="form-group row p-2">

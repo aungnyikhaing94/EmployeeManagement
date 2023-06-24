@@ -10,7 +10,11 @@ namespace EmployeeManagement.Data
 
         }
 
+
+
         public DbSet<Employee> Employee { get; set; }
+        public DbSet<Department> Department { get; set; }
+        public DbSet<Position> Position { get; set; }
 
     }
 }

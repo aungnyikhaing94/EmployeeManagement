@@ -1,8 +1,7 @@
-﻿@model EmployeeManagement.Models.Employee
+﻿@model EmployeeManagement.Models.ViewModel.EmployeeVM
 
 <form method="post" asp-action="Create">
     <div class="border p-3">
-        @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
         <div class="form-group row">
             <h2 class="text-info pl-3">Add Employee</h2>
         </div>
@@ -10,47 +9,51 @@
             <div class="col-8">
                 <div class="form-group row p-2">
                     <div class="col-4">
-                        <label asp-for="empName"></label>
+                        <label asp-for="Employee.empName">Employee Name</label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="empName" class="form-control" />
-                        <span asp-validation-for="empName" class="text-danger"></span>
+                        <input asp-for="Employee.empName" class="form-control" />
+                        <span asp-validation-for="Employee.empName" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row p-2">
                     <div class="col-4">
-                        <label asp-for="DOB"></label>
+                        <label asp-for="Employee.DOB">DOB</label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="DOB" class="form-control" />
-                        <span asp-validation-for="DOB" class="text-danger"></span>
+                        <input type="date" asp-for="Employee.DOB" class="form-control" value=""/>
+                        <span asp-validation-for="Employee.DOB" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row p-2">
                     <div class="col-4">
-                        <label asp-for="gender"></label>
+                        <label asp-for="Employee.gender">Gender</label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="gender" class="form-control" />
-                        <span asp-validation-for="gender" class="text-danger"></span>
+                        <input asp-for="Employee.gender" class="form-control" />
+                        <span asp-validation-for="Employee.gender" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row p-2">
                     <div class="col-4">
-                        <label asp-for="department"></label>
+                        <label asp-for="Employee.DepartmentId">Department</label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="department" class="form-control" />
-                        <span asp-validation-for="department" class="text-danger"></span>
+                        <select asp-for="Employee.DepartmentId" asp-items="@Model.DepartmentSelectList" class="form-control">
+                            <option disabled selected>--Select--</option>
+                        </select>
+                        <span asp-validation-for="Employee.DepartmentId" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row p-2">
                     <div class="col-4">
-                        <label asp-for="position"></label>
+                        <label asp-for="Employee.PositionId">Position</label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="position" class="form-control" />
-                        <span asp-validation-for="position" class="text-danger"></span>
+                        <select asp-for="Employee.PositionId" asp-items="@Model.PositionSelectList" class="form-control">
+                            <option disabled selected>--Select--</option>
+                        </select>
+                        <span asp-validation-for="Employee.PositionId" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group row p-2">
@@ -74,5 +77,35 @@
 @section Scripts{
 
     @{ <partial name="_ValidationScriptsPartial" /> }
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Get the select elements
+            var departmentSelect = document.querySelector("#Employee_DepartmentId");
+            var positionSelect = document.querySelector("#Employee_PositionId");
+
+
+            // Change position items base on departmentSelect changes
+            departmentSelect.addEventListener("change", function() {
+                var departmentId = $(this).val();
+
+                $.ajax({
+                    url: '@Url.Action("GetPositionsByDepartmentId", "Employee")',
+                    type: 'GET',
+                    data: { departmentId: departmentId },
+                    success: function (data) {
+                        // Clear the existing position dropdown options
+                        $("#Employee_PositionId").empty();
+
+                        // Add the new position options based on the retrieved data
+                        $.each(data, function (index, position) {
+                            $("#Employee_PositionId").append($('<option></option>').val(position.value).text(position.text));
+                        });
+                    }
+                });
+
+            });
+        });
+    </script>
 
 }

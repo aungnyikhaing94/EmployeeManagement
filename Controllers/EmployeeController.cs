@@ -1,6 +1,9 @@
 ﻿using EmployeeManagement.Data;
 using EmployeeManagement.Models;
+using EmployeeManagement.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManagement.Controllers
 {
@@ -12,30 +15,68 @@ namespace EmployeeManagement.Controllers
         {
             _db = db;
         }
+
+        // GET - Index
         public IActionResult Index()
         {
-            IEnumerable<Employee> objList = _db.Employee;
+            IEnumerable<Employee> objList = _db.Employee.Include(u => u.Position).Include(u => u.Department);
+            return View(objList);
+        }
+
+        //POST - Search
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Search(string searchStr)
+        {
+            int searchEmpNo;
+            IEnumerable<Employee> objList;
+
+            bool success = int.TryParse(searchStr, out searchEmpNo);
+
+            if (success)
+            {
+                objList = _db.Employee.Include(e => e.Position).Include(e => e.Department).Where(e => e.Position.Name == searchStr || e.Department.Name == searchStr || e.empName == searchStr || e.empNo == searchEmpNo);
+            }
+            else
+            {
+                objList = _db.Employee.Include(e => e.Position).Include(e => e.Department).Where(e => e.Position.Name == searchStr || e.Department.Name == searchStr || e.empName == searchStr);
+            }
+
             return View(objList);
         }
 
         //GET - CREATE
         public IActionResult Create()
         {
-            return View();
+            EmployeeVM employeeVM = new EmployeeVM()
+            {
+                Employee = new Employee(),
+                PositionSelectList = _db.Position.Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
+                }),
+                DepartmentSelectList = _db.Department.Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
+                })
+            };
+            return View(employeeVM);
         }
 
         //POST - CREATE
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Employee obj)
+        public IActionResult Create(EmployeeVM employeeVM)
         {
             if (ModelState.IsValid)
             {
-                _db.Employee.Add(obj);
+                _db.Employee.Add(employeeVM.Employee);
                 _db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(obj);
+            return View(employeeVM);
         }
 
         //GET - EDIT
@@ -51,21 +92,36 @@ namespace EmployeeManagement.Controllers
                 return NotFound();
             }
 
-            return View(obj);
+            EmployeeVM employeeVM = new EmployeeVM()
+            {
+                Employee = obj,
+                PositionSelectList = _db.Position.Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
+                }),
+                DepartmentSelectList = _db.Department.Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
+                })
+            };
+
+            return View(employeeVM);
         }
 
         //POST - EDIT
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Employee obj)
+        public IActionResult Edit(EmployeeVM employeeVM)
         {
             if (ModelState.IsValid)
             {
-                _db.Employee.Update(obj);
+                _db.Employee.Update(employeeVM.Employee);
                 _db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(obj);
+            return View(employeeVM);
         }
 
         //GET - DELETE
@@ -75,7 +131,7 @@ namespace EmployeeManagement.Controllers
             {
                 return NotFound();
             }
-            var obj = _db.Employee.Find(id);
+            var obj = _db.Employee.Include(e => e.Position).Include(e => e.Department).FirstOrDefault(e => e.empNo == id);
             if (obj == null)
             {
                 return NotFound();
@@ -90,7 +146,6 @@ namespace EmployeeManagement.Controllers
         public IActionResult DeletePost(int? empNo)
         {
             var obj = _db.Employee.Find(empNo);
-            Console.WriteLine(obj);
             if (obj == null)
             {
                 return NotFound();
@@ -98,6 +153,18 @@ namespace EmployeeManagement.Controllers
             _db.Employee.Remove(obj);
             _db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        // GET - GetPositionByDepartmentId
+        public IActionResult GetPositionsByDepartmentId(int departmentId)
+        {
+            var Positions = _db.Position.Where(p => p.DepartmentId == departmentId)
+                                        .Select(i => new SelectListItem {
+                                            Text = i.Name,
+                                            Value = i.Id.ToString()
+                                        }).ToList();
+
+            return Json(Positions);
         }
     }
 }
